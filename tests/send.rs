@@ -17,7 +17,7 @@ static INITIALIZE: OnceCell<()> = OnceCell::const_new();
 
 async fn setup() {
     spawn(INITIALIZE.get_or_init(|| server::create(PORTS)));
-    sleep(Duration::from_secs(3)).await;
+    sleep(Duration::from_secs(10)).await;
 }
 
 #[tokio::test]
