@@ -14,12 +14,12 @@ pub use policy::{LoadBalancerPolicy, LoadBalancerPolicyTrait};
 pub use weight::WeightProvider;
 
 pub type BoxLoadBalancer<I, E> = Box<
-    dyn LoadBalancer<Element=I, Error=E, Future=BoxFuture<'static, Result<Option<I>, E>>>
-    + Send
-    + Sync,
+    dyn LoadBalancerTrait<Element = I, Error = E, Future = BoxFuture<'static, Result<Option<I>, E>>>
+        + Send
+        + Sync,
 >;
 
-pub trait LoadBalancer {
+pub trait LoadBalancerTrait {
     ///
     /// load balancer element type
     ///
@@ -33,7 +33,7 @@ pub trait LoadBalancer {
     ///
     /// load balancer choose element future type
     ///
-    type Future: Future<Output=Result<Option<Self::Element>, Self::Error>>;
+    type Future: Future<Output = Result<Option<Self::Element>, Self::Error>>;
 
     ///
     /// load balancer choose a effect element
@@ -62,9 +62,9 @@ impl<L> BoxFutureLoadBalancer<L> {
     }
 }
 
-impl<L> LoadBalancer for BoxFutureLoadBalancer<L>
+impl<L> LoadBalancerTrait for BoxFutureLoadBalancer<L>
 where
-    L: LoadBalancer,
+    L: LoadBalancerTrait,
     L::Future: Send + 'static,
 {
     type Element = L::Element;

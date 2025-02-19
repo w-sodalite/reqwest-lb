@@ -1,4 +1,5 @@
-use crate::lb::{BoxLoadBalancer, LoadBalancer};
+use crate::lb::BoxLoadBalancer;
+use crate::LoadBalancerTrait;
 use std::collections::HashMap;
 use std::convert::Infallible;
 
@@ -17,7 +18,7 @@ impl<I, E> Default for LoadBalancerFactory<I, E> {
 impl<I, E> LoadBalancerFactory<I, E> {
     pub fn add<L>(&mut self, host: &str, load_balancer: L)
     where
-        L: LoadBalancer<Element = I, Error = E> + Send + Sync + 'static,
+        L: LoadBalancerTrait<Element = I, Error = E> + Send + Sync + 'static,
         L::Future: Send + 'static,
     {
         self.registry
