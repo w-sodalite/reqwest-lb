@@ -3,11 +3,11 @@ use crate::LoadBalancerTrait;
 use std::collections::HashMap;
 use std::convert::Infallible;
 
-pub struct LoadBalancerFactory<I, E = Infallible> {
+pub struct LoadBalancerRegistry<I, E = Infallible> {
     registry: HashMap<String, BoxLoadBalancer<I, E>>,
 }
 
-impl<I, E> Default for LoadBalancerFactory<I, E> {
+impl<I, E> Default for LoadBalancerRegistry<I, E> {
     fn default() -> Self {
         Self {
             registry: HashMap::default(),
@@ -15,7 +15,7 @@ impl<I, E> Default for LoadBalancerFactory<I, E> {
     }
 }
 
-impl<I, E> LoadBalancerFactory<I, E> {
+impl<I, E> LoadBalancerRegistry<I, E> {
     pub fn add<L>(&mut self, host: &str, load_balancer: L)
     where
         L: LoadBalancerTrait<Element = I, Error = E> + Send + Sync + 'static,
@@ -29,7 +29,7 @@ impl<I, E> LoadBalancerFactory<I, E> {
         self.registry.remove(host);
     }
 
-    pub fn get(&self, host: &str) -> Option<&BoxLoadBalancer<I, E>> {
+    pub fn find(&self, host: &str) -> Option<&BoxLoadBalancer<I, E>> {
         self.registry.get(host)
     }
 }

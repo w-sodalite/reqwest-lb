@@ -1,3 +1,7 @@
+mod registry;
+mod policy;
+mod weight;
+
 use futures::future::BoxFuture;
 use http::Extensions;
 use std::fmt::Debug;
@@ -5,11 +9,7 @@ use std::future::Future;
 use std::sync::atomic::AtomicU64;
 use std::sync::Arc;
 
-mod factory;
-mod policy;
-mod weight;
-
-pub use factory::LoadBalancerFactory;
+pub use registry::LoadBalancerRegistry;
 pub use policy::{LoadBalancerPolicy, LoadBalancerPolicyTrait};
 pub use weight::WeightProvider;
 
